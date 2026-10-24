@@ -3,7 +3,7 @@
 **Ask for an explainer video in one sentence. A coding agent writes the script, records the voiceover, builds each scene in Manim or Remotion, checks the frames and hands you a finished, subtitled MP4, in the language you ask for.**
 
 
-[![PolyCue Studio demo: pipeline overview (Remotion) and feature grid (Manim)](docs/assets/demo.gif)](https://github.com/user-attachments/assets/ee653de6-6681-4f15-bee3-d4e448b07062)
+![PolyCue Studio demo: pipeline overview (Remotion) and feature grid (Manim)](docs/assets/demo.gif)
 
 
 *The demo above was produced by the studio itself, with no manual editing. Its source is included in the repo as an example ([`studio_showcase`](#example-project)).*
