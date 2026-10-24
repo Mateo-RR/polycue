@@ -1,0 +1,3 @@
+# Tailwind v4 skips gitignored files when detecting classes; the video folders are gitignored
+# (private by default). Files named .ignore override .gitignore for Tailwind (ripgrep rules) but not for git.
+!*/

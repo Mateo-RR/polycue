@@ -1,0 +1,32 @@
+{
+  "verified": true,
+  "verified_on": "2026-10-21",
+  "_comment": "SETUP Phase 2 checks every voice against `edge-tts --list-voices`, removes missing ones and sets verified=true.",
+  "default_language": "es-ES",
+  "defaults": { "rate": "+0%", "pitch": "+0Hz", "volume": "+0%" },
+  "languages": {
+    "es-ES": { "name": "Español (España)",    "default": "es-ES-AlvaroNeural",  "male": ["es-ES-AlvaroNeural"],  "female": ["es-ES-ElviraNeural"] },
+    "es-MX": { "name": "Español (México)",    "default": "es-MX-JorgeNeural",   "male": ["es-MX-JorgeNeural"],   "female": ["es-MX-DaliaNeural"] },
+    "en-US": { "name": "English (US)",        "default": "en-US-GuyNeural",     "male": ["en-US-GuyNeural", "en-US-ChristopherNeural"], "female": ["en-US-JennyNeural", "en-US-AriaNeural"] },
+    "en-GB": { "name": "English (UK)",        "default": "en-GB-RyanNeural",    "male": ["en-GB-RyanNeural"],    "female": ["en-GB-SoniaNeural"] },
+    "fr-FR": { "name": "Français",            "default": "fr-FR-HenriNeural",   "male": ["fr-FR-HenriNeural"],   "female": ["fr-FR-DeniseNeural"] },
+    "de-DE": { "name": "Deutsch",             "default": "de-DE-ConradNeural",  "male": ["de-DE-ConradNeural"],  "female": ["de-DE-KatjaNeural"] },
+    "it-IT": { "name": "Italiano",            "default": "it-IT-DiegoNeural",   "male": ["it-IT-DiegoNeural"],   "female": ["it-IT-ElsaNeural"] },
+    "pt-BR": { "name": "Português (Brasil)",  "default": "pt-BR-AntonioNeural", "male": ["pt-BR-AntonioNeural"], "female": ["pt-BR-FranciscaNeural"] },
+    "pt-PT": { "name": "Português (Portugal)","default": "pt-PT-DuarteNeural",  "male": ["pt-PT-DuarteNeural"],  "female": ["pt-PT-RaquelNeural"] },
+    "gl-ES": { "name": "Galego",              "default": "gl-ES-RoiNeural",     "male": ["gl-ES-RoiNeural"],     "female": ["gl-ES-SabelaNeural"] },
+    "ca-ES": { "name": "Català",              "default": "ca-ES-EnricNeural",   "male": ["ca-ES-EnricNeural"],   "female": ["ca-ES-JoanaNeural"] }
+  },
+  "aliases": {
+    "español": "es-ES", "castellano": "es-ES", "spanish": "es-ES",
+    "mexicano": "es-MX", "español latino": "es-MX", "latam": "es-MX",
+    "inglés": "en-US", "english": "en-US", "americano": "en-US",
+    "británico": "en-GB", "british": "en-GB",
+    "francés": "fr-FR", "french": "fr-FR",
+    "alemán": "de-DE", "german": "de-DE",
+    "italiano": "it-IT", "italian": "it-IT",
+    "portugués": "pt-PT", "brasileño": "pt-BR", "portugués de brasil": "pt-BR",
+    "gallego": "gl-ES", "galician": "gl-ES",
+    "catalán": "ca-ES", "catalan": "ca-ES"
+  }
+}

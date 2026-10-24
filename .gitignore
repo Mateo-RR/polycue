@@ -1,0 +1,28 @@
+manim_engine/.venv/
+remotion_engine/node_modules/
+**/media/
+projects/*/renders/
+projects/*/qa/
+output/
+__pycache__/
+*.pyc
+/inputs
+/ideas
+# Partial TTS downloads
+*.part
+.pytest_cache/
+# Per-machine marker written by docs/SETUP.md when the smoke test passes
+.studio_ready
+
+# Videos are private by default: only the showcase is versioned, as an example.
+# To publish another video, add `!<dir>/<slug>/` lines for its three folders.
+projects/*
+!projects/studio_showcase/
+projects/*/subtitles/
+# Voiceover audio (and the timings derived from it) is never published, not even for whitelisted videos
+projects/*/locales/*/audio/
+projects/*/locales/*/timings.json
+manim_engine/scenes/*
+!manim_engine/scenes/studio_showcase/
+remotion_engine/src/videos/*/
+!remotion_engine/src/videos/studio_showcase/

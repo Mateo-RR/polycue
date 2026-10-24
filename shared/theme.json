@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "fps": 60,
+  "padding_frames": 24,
+  "canvas": {
+    "vertical":   { "width": 1080, "height": 1920 },
+    "horizontal": { "width": 1920, "height": 1080 }
+  },
+  "safe_area": { "ratio": 0.85 },
+  "zones": {
+    "_comment": "Fractions of canvas height measured from the top. Visuals live only in 'content'. 'subtitles' is always reserved.",
+    "vertical": {
+      "content":   { "top": 0.10, "bottom": 0.64 },
+      "subtitles": { "top": 0.66, "bottom": 0.78 }
+    },
+    "horizontal": {
+      "content":   { "top": 0.075, "bottom": 0.80 },
+      "subtitles": { "top": 0.82,  "bottom": 0.925 }
+    }
+  },
+  "colors": {
+    "background": "#0B0F19",
+    "primary":    "#38BDF8",
+    "secondary":  "#A855F7",
+    "accent":     "#F59E0B",
+    "success":    "#10B981",
+    "text":       "#F8FAFC",
+    "text_muted": "#94A3B8",
+    "surface":    "#131A2A",
+    "border":     "#1E293B"
+  },
+  "fonts": {
+    "sans": "Inter",
+    "mono": "JetBrains Mono",
+    "fallback": [],
+    "dir": "shared/fonts"
+  },
+  "type_scale_px": {
+    "vertical":   { "display": 96,  "title": 72, "body": 44, "caption": 32 },
+    "horizontal": { "display": 110, "title": 72, "body": 40, "caption": 28 }
+  },
+  "subtitles": {
+    "font": "Inter",
+    "weight": 700,
+    "size_px": { "vertical": 64, "horizontal": 52 },
+    "color": "#F8FAFC",
+    "outline_color": "#0B0F19",
+    "outline_px": 4,
+    "highlight_color": "#F59E0B",
+    "max_chars_per_line": { "vertical": 22, "horizontal": 42 },
+    "max_lines": 2,
+    "min_duration_sec": 0.8
+  },
+  "motion": {
+    "scene_fade_in_sec": 0.25,
+    "scene_fade_out_sec": 0.35,
+    "max_fixed_transition_sec": 0.6,
+    "min_gap_between_cues_sec": 0.3
+  }
+}

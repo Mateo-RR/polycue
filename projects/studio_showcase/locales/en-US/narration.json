@@ -1,0 +1,8 @@
+{
+  "scene_01": {
+    "text": "Start with one sentence. [[script]] An agent writes the script, [[voice]] records the voiceover, [[engines]] picks Manim or Remotion for each scene, [[video]] and hands you the finished video."
+  },
+  "scene_02": {
+    "text": "You get [[math]] animated formulas, [[sims]] live simulations, [[languages]] any language, [[subs]] and word-synced subtitles. [[title]] One prompt. One hybrid studio."
+  }
+}

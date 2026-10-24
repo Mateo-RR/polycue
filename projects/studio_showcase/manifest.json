@@ -1,0 +1,29 @@
+{
+  "slug": "studio_showcase",
+  "title": "PolyCue Studio showcase",
+  "orientation": "horizontal",
+  "fps": 60,
+  "source_lang": "en-US",
+  "subtitles": "none",
+  "locales": {
+    "en-US": { "voice": "en-US-GuyNeural", "rate": "+6%", "pitch": "+0Hz", "volume": "+0%" }
+  },
+  "scenes": [
+    {
+      "id": "scene_01",
+      "engine": "remotion",
+      "entry": "Scene01",
+      "visual_plan": "Prompt bar typing a request; below, a 4-node pipeline (script -> voiceover -> scenes Manim/Remotion -> video) that lights up node by node with live mini-visuals and a packet travelling along the connectors",
+      "cues": ["script", "voice", "engines", "video"],
+      "lang_neutral": false
+    },
+    {
+      "id": "scene_02",
+      "engine": "manim",
+      "entry": "Scene02",
+      "visual_plan": "2x2 grid of living tiles that light up on cue: rotating phasor tracing a sine with Euler's formula; histogram converging to a Gaussian; a greeting cycling through languages with locale chips; karaoke subtitle line driven by a playhead. Then a dimmed grid behind the closing title with engine chips",
+      "cues": ["math", "sims", "languages", "subs", "title"],
+      "lang_neutral": false
+    }
+  ]
+}
