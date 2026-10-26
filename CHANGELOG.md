@@ -2,12 +2,16 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.1.1] — 2026-10-26
 
 ### Added
 
 - **CI** on GitHub Actions (`.github/workflows/ci.yml`): unit tests on Linux and Windows with Python 3.12 and 3.13, and a clean Linux install checked with `scripts/doctor.py` plus a Remotion typecheck.
 - **Roadmap** section in the README.
+
+### Changed
+
+- README: the platform status now says what CI checks on Linux.
 
 ## [0.1.0] — 2026-10-24
 
@@ -31,5 +35,5 @@ First public release.
 - Tested on Windows 11 only.
 - One engine per scene: a scene cannot mix Manim and Remotion layers.
 
-[Unreleased]: https://github.com/Mateo-RR/polycue/compare/v0.1.0...HEAD
+[0.1.1]: https://github.com/Mateo-RR/polycue/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Mateo-RR/polycue/releases/tag/v0.1.0

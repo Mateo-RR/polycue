@@ -111,7 +111,7 @@ CI runs these tests on Linux and Windows with Python 3.12 and 3.13, and checks t
 
 See the [changelog](CHANGELOG.md) for what each version includes.
 
-- **Tested on Windows 11.** The setup also covers macOS and Linux, but those have not been tested yet.
+- **Tested on Windows 11.** On Linux, CI checks that the setup installs cleanly, but no video has been rendered there yet. macOS is covered by the setup but has not been tested.
 - **Voiceover** uses [`edge-tts`](https://github.com/rany2/edge-tts), an unofficial client for Microsoft Edge's online TTS. It is free and sounds good, but it needs a network connection and could change or stop working without notice.
 - **Languages:** 11 are preconfigured in `shared/voices.json` (Spanish, English, French, German, Italian, Portuguese, Galician, Catalan, with regional variants). Any other language with an edge-tts voice can be added, as long as its on-screen text uses Latin or Greek script, which the theme fonts cover.
 - **The agent writes the scenes.** The scripts work on their own, but nothing generates scene code without the agent.
