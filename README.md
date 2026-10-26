@@ -1,5 +1,7 @@
 # PolyCue Studio
 
+[![CI](https://github.com/Mateo-RR/polycue/actions/workflows/ci.yml/badge.svg)](https://github.com/Mateo-RR/polycue/actions/workflows/ci.yml)
+
 **Ask for an explainer video in one sentence. A coding agent writes the script, records the voiceover, builds each scene in Manim or Remotion, checks the frames and hands you a finished, subtitled MP4, in the language you ask for.**
 
 
@@ -103,6 +105,8 @@ $PY -m pip install -r requirements-dev.txt
 $PY -m pytest tests
 ```
 
+CI runs these tests on Linux and Windows with Python 3.12 and 3.13, and checks that a clean Linux machine passes `scripts/doctor.py` after following its fixes.
+
 ## Status and limitations
 
 See the [changelog](CHANGELOG.md) for what each version includes.
@@ -112,6 +116,21 @@ See the [changelog](CHANGELOG.md) for what each version includes.
 - **Languages:** 11 are preconfigured in `shared/voices.json` (Spanish, English, French, German, Italian, Portuguese, Galician, Catalan, with regional variants). Any other language with an edge-tts voice can be added, as long as its on-screen text uses Latin or Greek script, which the theme fonts cover.
 - **The agent writes the scenes.** The scripts work on their own, but nothing generates scene code without the agent.
 - **One engine per scene.** A scene cannot mix Manim and Remotion layers; a scene that needs both is split in two.
+
+## Roadmap
+
+The plan for the next versions. Nothing here is implemented yet, and the order may change.
+
+| Version | Theme | Planned |
+|---|---|---|
+| 0.2 | Pipeline | Each video in a single folder (a breaking change to the project layout) and parallel scene rendering (`--jobs`) |
+| 0.3 | Voices | More voice providers (Azure, ElevenLabs, local TTS), API keys in a `.env` file, and forced alignment for voices that do not report word timings |
+| 0.4 | Camera | Geometric zoom (the camera moves in on what is already on screen) and semantic zoom (zooming in reveals a deeper level of detail), with rules for each in `docs/STYLE.md` |
+| 0.5 | Extra audio | A music and sound-effects track in `stitch.py`, and MIDI-driven animations |
+| 0.6 | 3D | 3D scenes with Remotion and Three.js, and a subtitle box for light backgrounds |
+| 1.0 | Stability | Tested on Windows, macOS and Linux; a documented and validated manifest format; no pending breaking changes |
+
+Larger experiments, such as several engines composing layers of one scene or Blender as a third engine, may arrive later, marked as experimental.
 
 ## Authorship
 
