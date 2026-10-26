@@ -318,7 +318,7 @@ def main():
     srt_path, ass_path = write_subtitles(cues, args.slug, args.lang, orientation, th)
 
     # 5. Outputs.
-    out_dir = REPO / "output" / args.slug
+    out_dir = project_dir(args.slug) / "output"
     out_dir.mkdir(parents=True, exist_ok=True)
     suffix = "_preview" if args.preview else ""
     plain = out_dir / f"{args.slug}_{args.lang}{suffix}.mp4"

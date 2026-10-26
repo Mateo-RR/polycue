@@ -1,2 +1,4 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
+/* Scene folders of every video (projects/<slug>/scenes/remotion/), listed by remotion.config.ts. */
+@import "./sources.generated.css";

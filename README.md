@@ -50,7 +50,7 @@ $PY scripts/tts_sync.py  --slug studio_showcase --lang en-US                  # 
 $PY scripts/render.py    --slug studio_showcase --lang en-US --preview        # fast preview
 $PY scripts/qa_frames.py --slug studio_showcase --lang en-US --preview --at-cues
 $PY scripts/render.py    --slug studio_showcase --lang en-US                  # final render
-$PY scripts/stitch.py    --slug studio_showcase --lang en-US --subs burn      # → output/studio_showcase/
+$PY scripts/stitch.py    --slug studio_showcase --lang en-US --subs burn      # → projects/studio_showcase/output/
 ```
 
 Set up the environment first by following `docs/SETUP.md` (section "Shortcut").
@@ -60,12 +60,12 @@ Set up the environment first by following `docs/SETUP.md` (section "Shortcut").
 ```text
 narration.json ──► tts_sync.py ──► audio/*.mp3 + timings.json (durations, cue frames, word times)
                                           │
-manifest.json (engine per scene) ──► render.py ──► Manim clips ─┐
+manifest.json (engine per scene) ──► render.py ──► Manim clips ─┐  scenes render in parallel
                                           │       Remotion clips ┤  clean: no audio, no subtitles
                                           ▼                      │
                                    qa_frames.py (agent QA loop)  │
                                                                  ▼
-                         stitch.py: normalize + mux voice + concat + loudnorm + subtitles ──► output/<slug>/*.mp4
+                         stitch.py: normalize + mux voice + concat + loudnorm + subtitles ──► projects/<slug>/output/*.mp4
 ```
 
 ### Why not just use manim-voiceover or Remotion's agent skills?
@@ -87,16 +87,15 @@ The building blocks already exist, and this project uses them where they fit. [`
 |---|---|
 | `CLAUDE.md`, `docs/` | The agent-facing spec: setup, engine routing and visual rules, production and localization procedures |
 | `shared/` | `theme.json` (colors, fonts, canvas, zones, subtitle style), `voices.json`, fonts |
-| `scripts/` | `doctor.py`, `tts_sync.py`, `render.py`, `qa_frames.py`, `stitch.py` |
+| `scripts/` | `doctor.py`, `tts_sync.py`, `render.py`, `qa_frames.py`, `stitch.py`, `migrate_layout.py` |
 | `manim_engine/studio/` | `SyncedScene` (cue-based timing), theme and i18n helpers |
 | `remotion_engine/src/studio/` | `useCue`, `SafeArea`, `Fade`, theme bridge |
-| `projects/<slug>/` | Per video: language-neutral `manifest.json` + `locales/<lang>/` (narration, strings) |
-| `manim_engine/scenes/<slug>/`, `remotion_engine/src/videos/<slug>/` | Per video: scene code for each engine |
+| `projects/<slug>/` | Everything about one video: language-neutral `manifest.json`, `locales/<lang>/` (narration, strings), `scenes/manim/` and `scenes/remotion/` (scene code), renders and the final output |
 | `tests/` | Unit tests for narration parsing, cue alignment and subtitle layout |
 
 ### Example project
 
-`studio_showcase` (the demo video) is the only video included: 2 scenes, one per engine. Its voiceover audio is not included; `tts_sync.py` regenerates it. Your own videos are git-ignored by default, so they stay local unless you whitelist them in `.gitignore`.
+`studio_showcase` (the demo video) is the only video included: 2 scenes, one per engine. Its voiceover audio is not included; `tts_sync.py` regenerates it. Your own videos are git-ignored by default, so they stay local unless you whitelist them in `.gitignore` (one `!projects/<slug>/` line).
 
 ### Tests
 
@@ -123,7 +122,6 @@ The plan for the next versions. Nothing here is implemented yet, and the order m
 
 | Version | Theme | Planned |
 |---|---|---|
-| 0.2 | Pipeline | Each video in a single folder (a breaking change to the project layout) and parallel scene rendering (`--jobs`) |
 | 0.3 | Voices | More voice providers (Azure, ElevenLabs, local TTS), API keys in a `.env` file, and forced alignment for voices that do not report word timings |
 | 0.4 | Camera | Geometric zoom (the camera moves in on what is already on screen) and semantic zoom (zooming in reveals a deeper level of detail), with rules for each in `docs/STYLE.md` |
 | 0.5 | Extra audio | A music and sound-effects track in `stitch.py`, and MIDI-driven animations |

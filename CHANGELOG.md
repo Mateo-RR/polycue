@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] — 2026-10-26
+
+### Changed
+
+- **Breaking: each video lives in a single folder.** Scene code moved from `manim_engine/scenes/<slug>/` and `remotion_engine/src/videos/<slug>/` to `projects/<slug>/scenes/manim/` and `projects/<slug>/scenes/remotion/`, and final videos from `output/<slug>/` to `projects/<slug>/output/`. Publishing a video now takes one `!projects/<slug>/` line in `.gitignore`.
+- Remotion scenes import the studio helpers as `@studio/…` instead of `../../studio/…`; Manim scenes import their helpers as `from common import …` instead of `from scenes.<slug>.common import …`.
+- `remotion_engine/src/videos/registry.ts` moved to `remotion_engine/src/registry.ts`.
+
+### Added
+
+- **Parallel rendering:** `render.py --jobs N` (default: half the CPU cores). Manim scenes render in parallel; Remotion scenes run one at a time alongside them, since a single Remotion render already uses several cores. Six Manim scenes went from 106 s to 28 s on a 12-thread machine.
+- Remotion is bundled once per `render.py` run and every Remotion scene renders from that bundle.
+- A failing scene no longer stops the others: `render.py` finishes the rest and reports every error after the summary table.
+- `scripts/migrate_layout.py` moves videos from the 0.1 layout and rewrites their imports (`--dry-run` to preview).
+
+### Upgrading from 0.1
+
+Run `manim_engine/.venv/bin/python scripts/migrate_layout.py --dry-run`, then without `--dry-run` (on Windows, `manim_engine\.venv\Scripts\python`). If you had whitelisted videos in `.gitignore`, replace their old lines with one `!projects/<slug>/` line per video, as the script reminds you.
+
 ## [0.1.1] — 2026-10-26
 
 ### Added
@@ -35,5 +54,6 @@ First public release.
 - Tested on Windows 11 only.
 - One engine per scene: a scene cannot mix Manim and Remotion layers.
 
+[0.2.0]: https://github.com/Mateo-RR/polycue/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/Mateo-RR/polycue/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Mateo-RR/polycue/releases/tag/v0.1.0

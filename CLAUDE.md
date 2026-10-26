@@ -18,6 +18,7 @@ This file is an index. Read only the documents the current task needs.
 
 1. If `scripts/`, `manim_engine/.venv/` or `remotion_engine/node_modules/` do not exist, or `.studio_ready` is missing at the repo root, the studio is not built yet. Tell the user, then follow `docs/SETUP.md` before doing anything else.
 2. Never improvise a missing script inline. If a script described in `docs/SETUP.md` is missing or broken, fix the script itself so the next video benefits.
+3. If `manim_engine/scenes/`, `remotion_engine/src/videos/` or `output/` still hold videos, they use the 0.1 layout. Tell the user and offer to run `scripts/migrate_layout.py` (try `--dry-run` first), which moves them into `projects/<slug>/`.
 
 ## Non-negotiable rules (summary)
 
@@ -46,23 +47,25 @@ This file is an index. Read only the documents the current task needs.
 ├── scripts/
 │   ├── doctor.py                 # Checks system tools, fonts, venv and node_modules; prints fixes
 │   ├── tts_sync.py               # Narration → mp3 + timings.json (durations, cues, words)
-│   ├── render.py                 # Renders scenes with the right engine (preview/final)
+│   ├── render.py                 # Renders scenes with the right engine, in parallel (preview/final)
 │   ├── qa_frames.py              # Extracts QA keyframes with safe-area overlay
-│   └── stitch.py                 # Normalize + mux audio + concat + subtitles → final mp4
+│   ├── stitch.py                 # Normalize + mux audio + concat + subtitles → final mp4
+│   └── migrate_layout.py         # One-off: moves videos from the 0.1 layout into projects/<slug>/
 ├── manim_engine/
 │   ├── .venv/
 │   ├── requirements.txt
-│   ├── studio/                   # theme.py, sync.py, i18n.py (shared helpers)
-│   └── scenes/<slug>/scene_XX.py
+│   └── studio/                   # theme.py, sync.py, i18n.py (shared helpers)
 ├── remotion_engine/
 │   └── src/
-│       ├── studio/               # theme.ts, useCue.ts, SafeArea.tsx, Fade.tsx
-│       ├── videos/<slug>/SceneXX.tsx
-│       ├── videos/registry.ts
+│       ├── studio/               # theme.ts, useCue.ts, SafeArea.tsx, Fade.tsx (imported as @studio/…)
+│       ├── registry.ts           # Finds projects/*/scenes/remotion/SceneXX.tsx
 │       ├── Root.tsx
 │       └── index.ts
-├── projects/<slug>/
+├── projects/<slug>/              # Everything about one video lives here
 │   ├── manifest.json             # Language-neutral: scenes, engines, cues, visual plans
+│   ├── scenes/
+│   │   ├── manim/scene_XX.py     # + helpers shared by the video's scenes (e.g. common.py)
+│   │   └── remotion/SceneXX.tsx  # + helpers (e.g. ui.tsx)
 │   ├── locales/<lang>/
 │   │   ├── narration.json
 │   │   ├── strings.json
@@ -70,6 +73,6 @@ This file is an index. Read only the documents the current task needs.
 │   │   └── audio/scene_XX.mp3
 │   ├── renders/<lang>/           # Clean scene clips (final) + preview/
 │   ├── qa/<lang>/                # QA keyframes
-│   └── subtitles/<lang>.srt|.ass
-└── output/<slug>/                # Final deliverables
+│   ├── subtitles/<lang>.srt|.ass
+│   └── output/                   # Final deliverables
 ```

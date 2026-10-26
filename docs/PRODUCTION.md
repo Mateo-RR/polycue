@@ -103,7 +103,7 @@ Read `locales/<lang>/timings.json`. If a scene's `duration_sec` falls outside 8�
 
 Every scene animation lasts exactly `total_sec` (= audio duration + 0.4 s padding = `duration_frames + 24` frames). The helpers enforce this; do not compute it by hand.
 
-**Manim** — `manim_engine/scenes/<slug>/<scene_id>.py`:
+**Manim** — `projects/<slug>/scenes/manim/<scene_id>.py`. Helpers shared by several scenes go in the same folder (e.g. `common.py`) and are imported as `from common import …`; do not name them like a standard-library or Manim module:
 
 ```python
 from manim import *
@@ -123,14 +123,14 @@ class Scene02(SyncedScene):
         self.finish()
 ```
 
-**Remotion** — `remotion_engine/src/videos/<slug>/<Entry>.tsx`, where `<Entry>` is `SceneNN` for `scene_NN` and the file exports a component with that same name. `src/videos/registry.ts` discovers it automatically; do not register it by hand:
+**Remotion** — `projects/<slug>/scenes/remotion/<Entry>.tsx`, where `<Entry>` is `SceneNN` for `scene_NN` and the file exports a component with that same name. `remotion_engine/src/registry.ts` discovers it automatically; do not register it by hand. Import the studio helpers through the `@studio` alias, and local helpers (e.g. `./ui`) relatively:
 
 ```tsx
 import { AbsoluteFill, Sequence } from "remotion";
-import { SceneProps } from "../../studio/types";
-import { SafeArea } from "../../studio/SafeArea";
-import { Fade } from "../../studio/Fade";
-import { useCue } from "../../studio/useCue";
+import { SceneProps } from "@studio/types";
+import { SafeArea } from "@studio/SafeArea";
+import { Fade } from "@studio/Fade";
+import { useCue } from "@studio/useCue";
 
 export const Scene01: React.FC<SceneProps> = (props) => {
   const inbox = useCue("inbox", props.timing);
@@ -164,7 +164,7 @@ Open every QA image (plain and overlay versions) and check:
 5. At cue frames: is the animated element actually visible when the voice mentions it?
 6. Does the scene match its `visual_plan`?
 
-If anything fails, fix the code and re-render only that scene (`--scenes scene_0X`). Maximum 3 iterations per scene; if it still fails, continue and report the issue to the user.
+If anything fails, fix the code and re-render only the affected scenes (`--scenes scene_0X …`; they render in parallel). Maximum 3 iterations per scene; if it still fails, continue and report the issue to the user.
 
 Also run a quick text check: search scene code for string literals that look like visible text (words with spaces outside `S()` / `strings[...]`) and move them to `strings.json`.
 

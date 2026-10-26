@@ -49,13 +49,13 @@ Notes:
 
 ## Phase 1 — Folders and fonts
 
-1. Create the folders from the layout in `CLAUDE.md` that do not exist yet: `scripts/`, `manim_engine/studio/`, `manim_engine/scenes/`, `remotion_engine/`, `projects/`, `output/`, `shared/fonts/`.
+1. Create the folders from the layout in `CLAUDE.md` that do not exist yet: `scripts/`, `manim_engine/studio/`, `remotion_engine/`, `projects/`, `shared/fonts/`.
 2. Download **Inter** and **JetBrains Mono** (static TTF files, at least Regular, Medium, SemiBold, Bold) from their official sources into `shared/fonts/`.
 3. Install both families system-wide for the current user (Manim's `Text()` uses system fonts through Pango):
    - macOS: copy to `~/Library/Fonts/`
    - Linux: copy to `~/.local/share/fonts/` and run `fc-cache -f`
    - Windows: install per user (ask first)
-4. Create a `.gitignore` excluding: `manim_engine/.venv/`, `remotion_engine/node_modules/`, `**/media/`, `projects/*/renders/`, `projects/*/qa/`, `output/`. Also keep videos private by default: ignore `projects/*`, `manim_engine/scenes/*` and `remotion_engine/src/videos/*/` (the user whitelists a video explicitly to publish it), and ignore `projects/*/locales/*/audio/` and `projects/*/locales/*/timings.json` so voiceover audio and its timings are never versioned.
+4. Create a `.gitignore` excluding: `manim_engine/.venv/`, `remotion_engine/node_modules/`, `remotion_engine/src/sources.generated.css`, `**/media/`, `projects/*/renders/`, `projects/*/qa/`, `projects/*/output/`. Also keep videos private by default: ignore `projects/*` (the user whitelists a video explicitly with a `!projects/<slug>/` line to publish it), and ignore `projects/*/locales/*/audio/` and `projects/*/locales/*/timings.json` so voiceover audio and its timings are never versioned.
 
 **Check:** `fc-list | grep -i "Inter"` (or the OS equivalent) finds both families.
 
@@ -124,12 +124,16 @@ Base class `SyncedScene(Scene)` used by every Manim scene:
    - `SafeArea.tsx`: wrapper that lays children inside the content zone for the current orientation (from props). Optional `debug` prop draws the safe area and subtitle zone outlines.
    - `Fade.tsx`: scene-level wrapper applying the fade-in at start and fade-out during the final padding frames, so Remotion scenes cut exactly like Manim scenes.
    - `types.ts`: `SceneProps = { slug; lang; orientation; timing: SceneTiming; strings: Record<string,string> }`.
-5. `src/videos/registry.ts`: exports an object `{ [slug]: { [sceneId]: Component } }`, built automatically with webpack's `require.context` from every `videos/<slug>/SceneNN.tsx` (which must export `SceneNN` → `scene_NN`). Nobody edits it by hand, so a clone that only contains some video folders still compiles.
-6. `src/Root.tsx`: registers one `<Composition>` per registry entry with:
+5. Scene code lives outside `remotion_engine/`, in `projects/<slug>/scenes/remotion/`. Make it compile from there:
+   - `remotion.config.ts`: after enabling Tailwind, extend webpack's `resolve` with `remotion_engine/node_modules` in `modules` (scene files have no `node_modules` above them) and an alias `@studio` → `src/studio`. Scenes import helpers as `@studio/<module>`.
+   - `tsconfig.json`: add `../projects/*/scenes/remotion` to `include`, and `paths` with `"@studio/*": ["./src/studio/*"]` and `"*": ["./node_modules/@types/*", "./node_modules/*"]` (types first, so `react` resolves to `@types/react`).
+   - Tailwind: its scanner skips git-ignored folders, and videos are git-ignored. `remotion.config.ts` writes `src/sources.generated.css` (git-ignored) with one `@source "../../projects/<slug>/scenes/remotion";` per video that has that folder, rewriting it only when the content changes; `src/index.css` imports it after `@config`. A glob such as `projects/*/scenes/remotion` does not work: Tailwind takes `projects/` as the base and then skips the ignored video folders.
+6. `src/registry.ts`: exports an object `{ [slug]: { [sceneId]: Component } }`, built automatically with webpack's `require.context` over `../../projects` from every `<slug>/scenes/remotion/SceneNN.tsx` (which must export `SceneNN` → `scene_NN`). Nobody edits it by hand, so a clone that only contains some videos still compiles.
+7. `src/Root.tsx`: registers one `<Composition>` per registry entry with:
    - `id`: `${slug}--${sceneId}` with underscores replaced by hyphens (Remotion ids only allow letters, digits and hyphens).
    - `fps={60}` and `calculateMetadata` that sets `durationInFrames = props.timing.total_frames` and `width`/`height` from `props.orientation` and `theme.json`.
    - Sensible `defaultProps` so the Remotion Studio preview opens without crashing.
-7. `src/index.ts`: `registerRoot(Root)`.
+8. `src/index.ts`: `registerRoot(Root)`.
 
 **Check:** `npx remotion compositions` lists the compositions without errors.
 
@@ -186,11 +190,12 @@ All scripts: Python, run with the venv, `argparse` CLI, `--help` text, clear err
 
 ### `scripts/render.py`
 
-`render.py --slug <slug> --lang <lang> [--scenes …] [--preview]`
+`render.py --slug <slug> --lang <lang> [--scenes …] [--preview] [--jobs N]`
 
 - Reads the manifest; for each scene, dispatches by `engine`.
-- **Manim:** sets `STUDIO_SLUG`, `STUDIO_LANG`, `STUDIO_ORIENTATION`, `STUDIO_QUALITY`, runs `manim render manim_engine/scenes/<slug>/<scene_id>.py <ClassName>` with a temporary `--media_dir`, disables audio/sections, then moves the resulting mp4 to the destination.
-- **Remotion:** writes a props JSON (`slug`, `lang`, `orientation`, `timing` for that scene, `strings`) and runs `npx remotion render <compositionId> <out> --props=<file> --codec=h264 --pixel-format=yuv420p` (preview: add `--scale=0.5`). Runs from `remotion_engine/`.
+- **Manim:** sets `STUDIO_SLUG`, `STUDIO_LANG`, `STUDIO_ORIENTATION`, `STUDIO_QUALITY` and a `PYTHONPATH` with the scene folder first (so scenes import their helpers as `from common import …`) and `manim_engine/`, runs `manim render projects/<slug>/scenes/manim/<scene_id>.py <ClassName>` with its own temporary `--media_dir` (LaTeX cache included, so parallel renders never share files), disables audio/sections, then moves the resulting mp4 to the destination.
+- **Remotion:** builds the project once per run (`npx remotion bundle src/index.ts --out-dir=<tmp>`), then for each scene writes a props JSON (`slug`, `lang`, `orientation`, `timing` for that scene, `strings`) and runs `npx remotion render <bundle> <compositionId> <out> --props=<file> --codec=h264 --pixel-format=yuv420p` (preview: add `--scale=0.5`). Runs from `remotion_engine/`.
+- **Parallel:** up to `--jobs` scenes at a time (default: half the CPU cores). Manim uses about one core per scene, so its scenes share the workers; a single Remotion render already uses several cores, so Remotion scenes queue on one worker of their own and run one at a time alongside the Manim ones. Threads are enough (they only launch and wait for the engine processes). A failing scene does not stop the others; all errors are reported after the summary table.
 - Destinations: final → `projects/<slug>/renders/<lang>/<scene_id>.mp4`; preview → `projects/<slug>/renders/<lang>/preview/<scene_id>.mp4`.
 - After each render, verify with `ffprobe`: frame count equals `total_frames` (final) or matches `total_sec` within one frame (preview). Print a summary table.
 - Scenes marked `"lang_neutral": true` in the manifest may be rendered once in the source language and reused (see `docs/LOCALIZATION.md`); `render.py --reuse-neutral-from <source_lang>` copies them instead of rendering when their durations match within one frame.
@@ -219,7 +224,7 @@ All scripts: Python, run with the venv, `argparse` CLI, `--help` text, clear err
    - Write `projects/<slug>/subtitles/<lang>.srt` and `<lang>.ass`. The `.ass` style uses the theme font, size, colors and outline, with its vertical position inside the subtitle zone for the orientation.
    - `burn`: apply the `.ass` with ffmpeg's `ass` filter using `fontsdir=shared/fonts`.
    - `soft`: add the `.srt` as a `mov_text` track with the correct language tag.
-5. Outputs in `output/<slug>/`:
+5. Outputs in `projects/<slug>/output/`:
    - `<slug>_<lang>.mp4` (no subtitles, or soft subtitles)
    - `<slug>_<lang>_subs.mp4` (burned subtitles, when `burn`)
    - `<slug>_<lang>.srt` (always)
@@ -235,6 +240,7 @@ Create `projects/_smoke_test/` with:
 
 - `manifest.json`: `orientation: "vertical"`, source language `es-ES`, two scenes of ~4 s: `scene_01` (Remotion: a title card plus one Lucide icon) and `scene_02` (Manim: `MathTex` of `a^2 + b^2 = c^2` that transforms into `c = \sqrt{a^2 + b^2}`), each with one cue.
 - `locales/es-ES/narration.json` and `strings.json` with short Spanish text.
+- `scenes/remotion/Scene01.tsx` and `scenes/manim/scene_02.py`.
 
 Then run the full pipeline: `tts_sync.py` → `render.py --preview` → `qa_frames.py --preview` (inspect the images) → `render.py` → `stitch.py --subs burn`.
 

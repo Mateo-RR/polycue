@@ -3,7 +3,7 @@ import React from "react";
 import { CalculateMetadataFunction, Composition } from "remotion";
 import { canvas, FPS, PADDING_FRAMES } from "./studio/theme";
 import type { SceneProps } from "./studio/types";
-import { registry } from "./videos/registry";
+import { registry } from "./registry";
 
 /**
  * Remotion ids allow only letters, digits and hyphens. Leading hyphens are stripped because

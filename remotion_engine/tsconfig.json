@@ -10,7 +10,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@studio/*": ["./src/studio/*"],
+      "*": ["./node_modules/@types/*", "./node_modules/*"]
+    }
   },
-  "include": ["src", "remotion.config.ts", "../shared/theme.json"]
+  "include": ["src", "remotion.config.ts", "../shared/theme.json", "../projects/*/scenes/remotion"]
 }

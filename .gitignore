@@ -1,9 +1,10 @@
 manim_engine/.venv/
 remotion_engine/node_modules/
+remotion_engine/src/sources.generated.css
 **/media/
 projects/*/renders/
 projects/*/qa/
-output/
+projects/*/output/
 __pycache__/
 *.pyc
 /inputs
@@ -15,14 +16,10 @@ __pycache__/
 .studio_ready
 
 # Videos are private by default: only the showcase is versioned, as an example.
-# To publish another video, add `!<dir>/<slug>/` lines for its three folders.
+# To publish another video, add a `!projects/<slug>/` line.
 projects/*
 !projects/studio_showcase/
 projects/*/subtitles/
 # Voiceover audio (and the timings derived from it) is never published, not even for whitelisted videos
 projects/*/locales/*/audio/
 projects/*/locales/*/timings.json
-manim_engine/scenes/*
-!manim_engine/scenes/studio_showcase/
-remotion_engine/src/videos/*/
-!remotion_engine/src/videos/studio_showcase/

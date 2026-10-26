@@ -1,12 +1,12 @@
 import React from "react";
 import { AudioLines, Clapperboard, FileText, Layers, MessageSquare, Play } from "lucide-react";
 import { interpolate, interpolateColors, useCurrentFrame } from "remotion";
-import { Fade } from "../../studio/Fade";
-import { FONT_MONO } from "../../studio/fonts";
-import { SafeArea } from "../../studio/SafeArea";
-import { colors, fadeInFrames, PADDING_FRAMES, typeScale } from "../../studio/theme";
-import type { SceneProps } from "../../studio/types";
-import { useCue, useCueProgress } from "../../studio/useCue";
+import { Fade } from "@studio/Fade";
+import { FONT_MONO } from "@studio/fonts";
+import { SafeArea } from "@studio/SafeArea";
+import { colors, fadeInFrames, PADDING_FRAMES, typeScale } from "@studio/theme";
+import type { SceneProps } from "@studio/types";
+import { useCue, useCueProgress } from "@studio/useCue";
 
 const CARD_W = 340;
 const CARD_H = 440;
