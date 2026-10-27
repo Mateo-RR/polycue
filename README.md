@@ -112,7 +112,7 @@ To time it on your machine:
 $PY scripts/benchmark.py    # times monte_carlo_pi with --jobs 1 4 4 1 and compares the four videos
 ```
 
-Each run first deletes what the pipeline generated for that video (voiceover, renders, QA frames, subtitles, final videos; never its script or scene code), so the script lists those files and asks before starting. The results animation above is a video made by the studio too ([`parallel_benchmark`](projects/parallel_benchmark)), from the measured times.
+You need a working studio (`scripts/doctor.py` all `ok`) and a network connection, since the voiceover is regenerated in every run; the default four runs take about 25 minutes on the machine above. Each run first deletes what the pipeline generated for that video (voiceover, renders, QA frames, subtitles, final videos; never its script or scene code), so the script lists those files and asks before starting. The results animation above is a video made by the studio too ([`parallel_benchmark`](projects/parallel_benchmark)), from the measured times.
 
 ## Repository layout
 

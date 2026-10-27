@@ -15,7 +15,8 @@ class Scene03(SyncedScene):
         left, right, top, bottom = content_box()
         cy = (top + bottom) / 2
         hits = int(inside(points(N_DOTS)).sum())
-        estimate = f"{4 * hits / N_DOTS:.3f}".replace(".", S("scene_03.decimal"))
+        # Braces keep LaTeX from spacing the separator like punctuation ("3,141", not "3, 141").
+        estimate = f"{4 * hits / N_DOTS:.3f}".replace(".", "{" + S("scene_03.decimal") + "}")
         ratio = rf"\frac{{\text{{{S('scene_03.inside')}}}}}{{\text{{{S('scene_03.total')}}}}}"
         size = type_size("title") * 1.9
 

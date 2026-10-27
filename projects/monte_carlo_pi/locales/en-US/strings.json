@@ -10,6 +10,7 @@
   "scene_04.axis_x": "dots",
   "scene_04.axis_y": "estimate",
   "scene_04.pi": "π",
+  "scene_04.decimal": ".",
   "scene_05.error": "error",
   "scene_05.dots": "dots",
   "scene_05.counts": "100|10,000",

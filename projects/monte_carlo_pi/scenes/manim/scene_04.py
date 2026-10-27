@@ -21,8 +21,11 @@ class Scene04(SyncedScene):
             axis_config={"color": TEXT_MUTED, "stroke_width": 3, "include_tip": False,
                          "font_size": type_size("caption") * 1.7},
             x_axis_config={"scaling": LogBase(custom_labels=True), "include_numbers": True},
-            y_axis_config={"include_numbers": True, "decimal_number_config": {"num_decimal_places": 1}},
         ).move_to([(left + right) / 2 + 0.4, (top + bottom) / 2, 0])
+        # y labels built here, so the decimal separator follows the language (strings.json).
+        sep = "{" + S("scene_04.decimal") + "}"
+        axes.y_axis.add_labels({y: MathTex(f"{y:.1f}".replace(".", sep), font_size=type_size("caption") * 1.7)
+                                for y in np.arange(Y_MIN, Y_MAX + 1e-9, 0.2)})
         x_label = Text(S("scene_04.axis_x"), font=FONT_SANS, font_size=type_size("caption"), color=TEXT_MUTED)
         x_label.next_to(axes.x_axis, DOWN, buff=0.15).align_to(axes.x_axis, RIGHT)
         y_label = Text(S("scene_04.axis_y"), font=FONT_SANS, font_size=type_size("caption"), color=TEXT_MUTED)
