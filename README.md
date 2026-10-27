@@ -1,6 +1,9 @@
 # PolyCue Studio
 
 [![CI](https://github.com/Mateo-RR/polycue/actions/workflows/ci.yml/badge.svg)](https://github.com/Mateo-RR/polycue/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Mateo-RR/polycue)](https://github.com/Mateo-RR/polycue/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](docs/SETUP.md)
 
 **Ask for an explainer video in one sentence. A coding agent writes the script, records the voiceover, builds each scene in Manim or Remotion, checks the frames and hands you a finished, subtitled MP4, in the language you ask for.**
 
