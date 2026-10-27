@@ -1,0 +1,20 @@
+{
+  "scene_01": {
+    "text": "Can you calculate [[pi]] pi just by throwing random dots? It sounds like a magic trick, but it is a real technique, [[method]] called the Monte Carlo method."
+  },
+  "scene_02": {
+    "text": "Take a square [[square]] with a circle inside it. Now drop [[dots]] thousands of random dots on the square, and sort them [[inside]] by whether they land inside the circle."
+  },
+  "scene_03": {
+    "text": "The circle covers [[ratio]] pi over four of the square. So the share of dots inside, [[times]] multiplied by four, [[estimate]] gives us an estimate of pi."
+  },
+  "scene_04": {
+    "text": "With only [[few]] a few dots, the estimate jumps around. But as [[more]] more and more dots fall, it settles closer [[converge]] to the true value of pi."
+  },
+  "scene_05": {
+    "text": "The catch is speed. The error [[error]] shrinks like one over the square root of the number of dots. So [[hundred]] a hundred times more dots buys you [[digit]] just one more digit."
+  },
+  "scene_06": {
+    "text": "So, [[dots]] random dots, [[ratio]] a simple ratio, and [[samples]] enough samples can find pi. The same idea [[uses]] powers physics, finance and computer graphics."
+  }
+}

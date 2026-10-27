@@ -50,6 +50,7 @@ This file is an index. Read only the documents the current task needs.
 │   ├── render.py                 # Renders scenes with the right engine, in parallel (preview/final)
 │   ├── qa_frames.py              # Extracts QA keyframes with safe-area overlay
 │   ├── stitch.py                 # Normalize + mux audio + concat + subtitles → final mp4
+│   ├── benchmark.py              # Times the whole pipeline with different --jobs values (deletes generated files, asks first)
 │   └── migrate_layout.py         # One-off: moves videos from the 0.1 layout into projects/<slug>/
 ├── manim_engine/
 │   ├── .venv/

@@ -1,0 +1,8 @@
+{
+  "scene_01": {
+    "text": "We made the same one-minute video twice, [[steps]] timing every step: once with one render job, and once with four. [[render]] Only the two render steps change."
+  },
+  "scene_02": {
+    "text": "Rendering got [[render]] two point three times faster, and the whole pipeline [[total]] one point eight times faster, [[same]] with exactly the same video at the end, frame for frame."
+  }
+}

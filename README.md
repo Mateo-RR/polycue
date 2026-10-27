@@ -18,6 +18,7 @@
 - **Cheap edits.** Changing a finished video only redoes what changed: fixing a sentence regenerates the voice and render of that scene alone, and the agent follows a cost table (`docs/LOCALIZATION.md`) to pick the cheapest way to apply each change.
 - **Subtitles without re-rendering.** Word-timed subtitles, burned in or as a separate track. A subtitle zone is always kept clear, so you can add them at any time.
 - **Self-checking.** The agent extracts keyframes with safe-area overlays, inspects them and fixes broken layouts before the final render.
+- **Parallel rendering.** Several scenes render at once, so rendering a one-minute video takes less than half the time on a 6-core laptop ([numbers below](#parallel-rendering)).
 - **Vertical or horizontal**, for Shorts/Reels/TikTok or YouTube.
 
 The repo is written as an **executable spec** for [Claude Code](https://claude.com/claude-code): `CLAUDE.md` and `docs/` describe how to build the studio from scratch and how to produce a video, and the agent follows them.
@@ -81,13 +82,45 @@ The building blocks already exist, and this project uses them where they fit. [`
 | Agents produce broken layouts | `qa_frames.py` extracts keyframes at every cue, with safe-area and subtitle-zone overlays. The agent fixes scenes in a bounded loop (max. 3 iterations per scene, `docs/PRODUCTION.md` step 5). |
 | Final mix is uneven | Two-pass EBU R128 loudness normalization (−14 LUFS / −1 dBTP), with audio trimmed to the exact video length. |
 
+## Parallel rendering
+
+`render.py` renders several scenes at once (`--jobs`, default: half the CPU cores). Manim scenes run in parallel; Remotion scenes run one at a time alongside them, since a single Remotion render already uses several cores.
+
+![Benchmark: the same video rendered with 1 job and with 4 jobs](docs/assets/parallel_benchmark.gif)
+
+The test video is [`monte_carlo_pi`](projects/monte_carlo_pi): 58 s, 1080p at 60 fps, 6 scenes (4 Manim, 2 Remotion), voiceover and burned-in subtitles. The whole pipeline ran from scratch four times, with 1, 4, 4 and 1 jobs in that order, so a laptop that slows down as it heats up favours neither setting. Each time is the average of the two runs of that setting:
+
+| Step | 1 job | 4 jobs | Speed-up |
+|---|---|---|---|
+| Voiceover (`tts_sync.py`) | 10.3 s | 10.1 s | — |
+| Preview render (`render.py --preview`) | 108.2 s | 43.8 s | 2.5× |
+| QA frames (`qa_frames.py`) | 9.7 s | 9.5 s | — |
+| Final render (`render.py`) | 178.8 s | 81.0 s | 2.2× |
+| Stitch (`stitch.py --subs burn`) | 57.9 s | 59.7 s | — |
+| **Rendering (both passes)** | **287 s** | **125 s** | **2.3×** |
+| **Whole pipeline** | **365 s** | **204 s** | **1.8×** |
+
+Only the render steps are parallel; voiceover, QA frames and stitching take the same time. All four runs produced the same video, frame for frame:
+
+![The four benchmark runs side by side, in sync](docs/assets/benchmark_runs.gif)
+
+Machine: Intel Core i7-10750H (6 cores / 12 threads), 16 GB RAM, Windows 11. Rendering uses the CPU only; the GPU is not used. The speed-up depends on the number of cores.
+
+To time it on your machine:
+
+```bash
+$PY scripts/benchmark.py    # times monte_carlo_pi with --jobs 1 4 4 1 and compares the four videos
+```
+
+Each run first deletes what the pipeline generated for that video (voiceover, renders, QA frames, subtitles, final videos; never its script or scene code), so the script lists those files and asks before starting. The results animation above is a video made by the studio too ([`parallel_benchmark`](projects/parallel_benchmark)), from the measured times.
+
 ## Repository layout
 
 | Path | What lives there |
 |---|---|
 | `CLAUDE.md`, `docs/` | The agent-facing spec: setup, engine routing and visual rules, production and localization procedures |
 | `shared/` | `theme.json` (colors, fonts, canvas, zones, subtitle style), `voices.json`, fonts |
-| `scripts/` | `doctor.py`, `tts_sync.py`, `render.py`, `qa_frames.py`, `stitch.py`, `migrate_layout.py` |
+| `scripts/` | `doctor.py`, `tts_sync.py`, `render.py`, `qa_frames.py`, `stitch.py`, `benchmark.py`, `migrate_layout.py` |
 | `manim_engine/studio/` | `SyncedScene` (cue-based timing), theme and i18n helpers |
 | `remotion_engine/src/studio/` | `useCue`, `SafeArea`, `Fade`, theme bridge |
 | `projects/<slug>/` | Everything about one video: language-neutral `manifest.json`, `locales/<lang>/` (narration, strings), `scenes/manim/` and `scenes/remotion/` (scene code), renders and the final output |
@@ -95,7 +128,7 @@ The building blocks already exist, and this project uses them where they fit. [`
 
 ### Example project
 
-`studio_showcase` (the demo video) is the only video included: 2 scenes, one per engine. Its voiceover audio is not included; `tts_sync.py` regenerates it. Your own videos are git-ignored by default, so they stay local unless you whitelist them in `.gitignore` (one `!projects/<slug>/` line).
+Three videos are included as examples: `studio_showcase` (the demo video: 2 scenes, one per engine), `monte_carlo_pi` (the benchmark video: 6 scenes) and `parallel_benchmark` (the benchmark results: 2 Remotion scenes). Their voiceover audio is not included; `tts_sync.py` regenerates it. Your own videos are git-ignored by default, so they stay local unless you whitelist them in `.gitignore` (one `!projects/<slug>/` line).
 
 ### Tests
 

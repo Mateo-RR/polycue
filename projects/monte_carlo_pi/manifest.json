@@ -1,0 +1,61 @@
+{
+  "slug": "monte_carlo_pi",
+  "title": "Finding pi with random dots",
+  "orientation": "horizontal",
+  "fps": 60,
+  "source_lang": "en-US",
+  "subtitles": "burn",
+  "locales": {
+    "en-US": { "voice": "en-US-GuyNeural", "rate": "+0%", "pitch": "+0Hz", "volume": "+0%" }
+  },
+  "scenes": [
+    {
+      "id": "scene_01",
+      "engine": "remotion",
+      "entry": "Scene01",
+      "visual_plan": "Hook: faint random dots drift in behind a big kinetic question 'Can random dots find π?'; then a chip with a dice icon names the Monte Carlo method",
+      "cues": ["pi", "method"],
+      "lang_neutral": false
+    },
+    {
+      "id": "scene_02",
+      "engine": "manim",
+      "entry": "Scene02",
+      "visual_plan": "A square with an inscribed circle draws itself; seeded random dots rain into the square; on cue, dots inside the circle turn sky and outside ones purple, with live inside/total counters",
+      "cues": ["square", "dots", "inside"],
+      "lang_neutral": false
+    },
+    {
+      "id": "scene_03",
+      "engine": "manim",
+      "entry": "Scene03",
+      "visual_plan": "Formula derivation with TransformMatchingTex: inside/total ≈ π/4, then π ≈ 4 · inside/total, then the numbers from the scene 2 sample giving the estimate",
+      "cues": ["ratio", "times", "estimate"],
+      "lang_neutral": false
+    },
+    {
+      "id": "scene_04",
+      "engine": "manim",
+      "entry": "Scene04",
+      "visual_plan": "Axes with a logarithmic dots axis; the running estimate of π is traced as dots accumulate, jumping early and settling on a dashed line at π",
+      "cues": ["few", "more", "converge"],
+      "lang_neutral": false
+    },
+    {
+      "id": "scene_05",
+      "engine": "manim",
+      "entry": "Scene05",
+      "visual_plan": "Formula error ∝ 1/√n; below, two rows compare 100 dots with error about 0.1 and 10,000 dots with error about 0.01, with ×100 and ÷10 arrows",
+      "cues": ["error", "hundred", "digit"],
+      "lang_neutral": false
+    },
+    {
+      "id": "scene_06",
+      "engine": "remotion",
+      "entry": "Scene06",
+      "visual_plan": "Recap: three cards light up in turn (random dots, a simple ratio, enough samples); then a row of use-case chips with icons (physics, finance, graphics)",
+      "cues": ["dots", "ratio", "samples", "uses"],
+      "lang_neutral": false
+    }
+  ]
+}

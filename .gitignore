@@ -5,6 +5,7 @@ remotion_engine/src/sources.generated.css
 projects/*/renders/
 projects/*/qa/
 projects/*/output/
+projects/*/benchmark/
 __pycache__/
 *.pyc
 /inputs
@@ -19,6 +20,8 @@ __pycache__/
 # To publish another video, add a `!projects/<slug>/` line.
 projects/*
 !projects/studio_showcase/
+!projects/monte_carlo_pi/
+!projects/parallel_benchmark/
 projects/*/subtitles/
 # Voiceover audio (and the timings derived from it) is never published, not even for whitelisted videos
 projects/*/locales/*/audio/
