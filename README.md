@@ -18,7 +18,7 @@
 - **Cheap edits.** Changing a finished video only redoes what changed: fixing a sentence regenerates the voice and render of that scene alone, and the agent follows a cost table (`docs/LOCALIZATION.md`) to pick the cheapest way to apply each change.
 - **Subtitles without re-rendering.** Word-timed subtitles, burned in or as a separate track. A subtitle zone is always kept clear, so you can add them at any time.
 - **Self-checking.** The agent extracts keyframes with safe-area overlays, inspects them and fixes broken layouts before the final render.
-- **Parallel rendering.** Several scenes render at once, so rendering a one-minute video takes less than half the time on a 6-core laptop ([numbers below](#parallel-rendering)).
+- **Parallel rendering.** Several scenes render at once, so rendering a one-minute video takes about half the time on a 6-core laptop ([numbers below](#parallel-rendering)).
 - **Vertical or horizontal**, for Shorts/Reels/TikTok or YouTube.
 
 The repo is written as an **executable spec** for [Claude Code](https://claude.com/claude-code): `CLAUDE.md` and `docs/` describe how to build the studio from scratch and how to produce a video, and the agent follows them.
@@ -84,35 +84,40 @@ The building blocks already exist, and this project uses them where they fit. [`
 
 ## Parallel rendering
 
-`render.py` renders several scenes at once (`--jobs`, default: half the CPU cores). Manim scenes run in parallel; Remotion scenes run one at a time alongside them, since a single Remotion render already uses several cores.
+`render.py` renders several scenes at once (`--jobs`, default: half the CPU threads). Manim scenes run in parallel; Remotion scenes run one at a time alongside them, since a single Remotion render already uses several cores. `--jobs 1` renders one scene after another, as version 0.1 did.
 
-![Benchmark: the same video rendered with 1 job and with 4 jobs](docs/assets/parallel_benchmark.gif)
+![Benchmark: the same video rendered with 1 job and with 4 jobs, in silent and Turbo modes](docs/assets/parallel_benchmark.gif)
 
-The test video is [`monte_carlo_pi`](projects/monte_carlo_pi): 58 s, 1080p at 60 fps, 6 scenes (4 Manim, 2 Remotion), voiceover and burned-in subtitles. The whole pipeline ran from scratch four times, with 1, 4, 4 and 1 jobs in that order, so a laptop that slows down as it heats up favours neither setting. Each time is the average of the two runs of that setting:
+The test video is [`monte_carlo_pi`](projects/monte_carlo_pi): 58 s, 1080p at 60 fps, 6 scenes (4 Manim, 2 Remotion), voiceover and burned-in subtitles. The machine is a laptop (Intel Core i7-10750H, 6 cores / 12 threads, 16 GB RAM, Windows 11), plugged in, measured in two of its power modes: silent (quieter, lower power limit) and Turbo (full power). In each mode the whole pipeline ran from scratch four times, with 1, 4, 4 and 1 jobs in that order, so a laptop that slows down as it heats up favours neither setting. Each time is the average of the two runs of that setting:
 
-| Step | 1 job | 4 jobs | Speed-up |
-|---|---|---|---|
-| Voiceover (`tts_sync.py`) | 10.3 s | 10.1 s | — |
-| Preview render (`render.py --preview`) | 108.2 s | 43.8 s | 2.5× |
-| QA frames (`qa_frames.py`) | 9.7 s | 9.5 s | — |
-| Final render (`render.py`) | 178.8 s | 81.0 s | 2.2× |
-| Stitch (`stitch.py --subs burn`) | 57.9 s | 59.7 s | — |
-| **Rendering (both passes)** | **287 s** | **125 s** | **2.3×** |
-| **Whole pipeline** | **365 s** | **204 s** | **1.8×** |
+| Step | Silent, 1 job | Silent, 4 jobs | Turbo, 1 job | Turbo, 4 jobs |
+|---|---|---|---|---|
+| Voiceover (`tts_sync.py`) | 10.3 s | 10.1 s | 8.5 s | 8.3 s |
+| Preview render (`render.py --preview`) | 108.2 s | 43.8 s (2.5×) | 77.7 s | 34.8 s (2.2×) |
+| QA frames (`qa_frames.py`) | 9.7 s | 9.5 s | 7.5 s | 7.2 s |
+| Final render (`render.py`) | 178.8 s | 81.0 s (2.2×) | 127.2 s | 63.7 s (2.0×) |
+| Stitch (`stitch.py --subs burn`) | 57.9 s | 59.7 s | 47.8 s | 47.8 s |
+| **Rendering (both passes)** | **287 s** | **125 s (2.3×)** | **205 s** | **99 s (2.1×)** |
+| **Whole pipeline** | **365 s** | **204 s (1.8×)** | **269 s** | **162 s (1.7×)** |
 
-Only the render steps are parallel; voiceover, QA frames and stitching take the same time. All four runs produced the same video, frame for frame:
+What the numbers show:
+
+- **Rendering takes about half the time** with 4 jobs in both modes. Only the render steps are parallel; voiceover, QA frames and stitching take the same time with any number of jobs.
+- **It is not 4× faster**, for two reasons. The step lasts as long as its slowest scene: with 4 jobs the final render took 64 s in Turbo mode, 56 of them for scene 2 (1,500 animated dots), while the other scenes had already finished. And scenes running together compete for the CPU: each Manim scene also encodes its video with several threads, Remotion drives a browser with several more, and a laptop lowers its clock speed when every core is busy. Scene 2 took 33 s alone and 56 s alongside the others.
+- **Turbo mode is faster in absolute terms, but gains less from parallelism.** A single job benefits most from the higher single-core boost of Turbo mode, so the 1-job runs improved more (365 s → 269 s) than the 4-job runs (204 s → 162 s). In silent mode, the parallel version is the one that loses less.
+- **Results depend on the machine.** More cores help; desktops, which keep their clock speed with every core busy, should gain more than laptops; and a video with more scenes of similar length spreads better over the jobs than one with a single heavy scene.
+
+All runs produced the same video, frame for frame (these are the four silent-mode runs):
 
 ![The four benchmark runs side by side, in sync](docs/assets/benchmark_runs.gif)
 
-Machine: Intel Core i7-10750H (6 cores / 12 threads), 16 GB RAM, Windows 11. Rendering uses the CPU only; the GPU is not used. The speed-up depends on the number of cores.
-
-To time it on your machine:
+Rendering uses the CPU only; the GPU is not used. To time it on your machine:
 
 ```bash
 $PY scripts/benchmark.py    # times monte_carlo_pi with --jobs 1 4 4 1 and compares the four videos
 ```
 
-You need a working studio (`scripts/doctor.py` all `ok`) and a network connection, since the voiceover is regenerated in every run; the default four runs take about 25 minutes on the machine above. Each run first deletes what the pipeline generated for that video (voiceover, renders, QA frames, subtitles, final videos; never its script or scene code), so the script lists those files and asks before starting. The results animation above is a video made by the studio too ([`parallel_benchmark`](projects/parallel_benchmark)), from the measured times.
+You need a working studio (`scripts/doctor.py` all `ok`) and a network connection, since the voiceover is regenerated in every run; the default four runs take about 20–25 minutes on the laptop above. Each run first deletes what the pipeline generated for that video (voiceover, renders, QA frames, subtitles, final videos; never its script or scene code), so the script lists those files and asks before starting. The results animation above is a video made by the studio too ([`parallel_benchmark`](projects/parallel_benchmark)), from the measured times.
 
 ## Repository layout
 

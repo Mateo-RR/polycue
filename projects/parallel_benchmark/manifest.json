@@ -1,6 +1,6 @@
 {
   "slug": "parallel_benchmark",
-  "title": "Parallel rendering: 1 job vs 4 jobs",
+  "title": "Parallel rendering: 1 job vs 4 jobs, silent and Turbo modes",
   "orientation": "horizontal",
   "fps": 60,
   "source_lang": "en-US",
@@ -13,7 +13,7 @@
       "id": "scene_01",
       "engine": "remotion",
       "entry": "Scene01",
-      "visual_plan": "Title 'Same video, 1 job vs 4 jobs' with a legend; five pipeline steps as rows of paired horizontal bars (1 job muted, 4 jobs sky) that grow with their seconds; on cue the two render rows light up with their speed-up",
+      "visual_plan": "Title and legend (1 job as in 0.1, 4 jobs); two panels, silent mode and Turbo mode, each with the five pipeline steps as paired bars on a shared scale; on cue the two render rows light up with their speed-up",
       "cues": ["steps", "render"],
       "lang_neutral": false
     },
@@ -21,8 +21,8 @@
       "id": "scene_02",
       "engine": "remotion",
       "entry": "Scene02",
-      "visual_plan": "Two big stat cards: rendering ×2.3 (seconds before → after) and whole pipeline ×1.8; a 'same output, frame for frame' badge; the test machine specs as chips at the bottom",
-      "cues": ["render", "total", "same"],
+      "visual_plan": "Two mode cards (silent, Turbo), each with the rendering and whole-pipeline speed-ups and their seconds; a 'same output, frame for frame' badge; the test machine specs as chips",
+      "cues": ["silent", "turbo", "same"],
       "lang_neutral": false
     }
   ]

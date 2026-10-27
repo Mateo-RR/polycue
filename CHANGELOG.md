@@ -12,7 +12,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
-- **Parallel rendering:** `render.py --jobs N` (default: half the CPU cores). Manim scenes render in parallel; Remotion scenes run one at a time alongside them, since a single Remotion render already uses several cores. On a 58-second test video with 6 scenes (4 Manim, 2 Remotion), `--jobs 4` made rendering 2.3× faster and the whole pipeline 1.8× faster, with the same output frame for frame (Intel Core i7-10750H, 6 cores; details in the README).
+- **Parallel rendering:** `render.py --jobs N` (default: half the CPU cores). Manim scenes render in parallel; Remotion scenes run one at a time alongside them, since a single Remotion render already uses several cores. On a 58-second test video with 6 scenes (4 Manim, 2 Remotion), `--jobs 4` made rendering 2.1–2.3× faster and the whole pipeline 1.7–1.8× faster than one scene at a time, with the same output frame for frame (laptop with an Intel Core i7-10750H, 6 cores, in its Turbo and silent power modes; details and the reasons it is not 4× in the README).
 - `scripts/benchmark.py` times the whole pipeline of a video with different `--jobs` values and checks that every run produces the same video.
 - Two more example videos: `monte_carlo_pi` (the benchmark video, published so anyone can reproduce the numbers with `scripts/benchmark.py`) and `parallel_benchmark` (the benchmark results animation shown in the README).
 - Remotion is bundled once per `render.py` run and every Remotion scene renders from that bundle.
