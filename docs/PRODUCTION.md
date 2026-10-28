@@ -163,7 +163,7 @@ Open every QA image (plain and overlay versions) and check:
 1. Does any element cross the safe-area box or enter the subtitle zone?
 2. Is any text clipped, overlapping other text, axes or titles?
 3. Are LaTeX equations overlapping axes or labels?
-4. Is the text readable at phone size (not below the `caption` size)?
+4. Is the text readable at phone size (not below the `caption` size, except fine print shown through a lens: `docs/STYLE.md`, section 6)?
 5. At cue frames: is the animated element actually visible when the voice mentions it?
 6. Does the scene match its `visual_plan`?
 7. Scenes with a camera move: does each move start at its cue, and is what it shows readable at the end of it? Check a strip of frames across each move as `docs/STYLE.md`, section 6 describes (the QA frames cannot show whether a move is abrupt), and for joins between scenes check that the first frame of the next scene is plain background (and so is the last frame of the first one, except for an edge leaving in a lateral transition).

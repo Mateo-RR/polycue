@@ -16,6 +16,7 @@
 - **Audio first.** The voiceover is generated before any animation, and every animation waits for a cue word in the narration, so visuals stay in sync with the voice to the frame.
 - **Cheap translations.** Scene code contains no text: narration and on-screen strings live in per-language files. A new language is a translation plus a mechanical re-render, and the voice speed can be adjusted so each scene keeps its original length. Scenes without text can be rendered once and reused in every language, as long as their timing matches.
 - **Cheap edits.** Changing a finished video only redoes what changed: fixing a sentence regenerates the voice and render of that scene alone, and the agent follows a cost table (`docs/LOCALIZATION.md`) to pick the cheapest way to apply each change.
+- **A camera that explains.** Zooms into a detail, a lens that magnifies a small region while the whole stays on screen, zooms through an element into the next level of detail, and sideways transitions between scenes, in both engines. The agent plans them with the script, following rules on when a move helps and how many a video can take.
 - **Subtitles without re-rendering.** Word-timed subtitles, burned in or as a separate track. A subtitle zone is always kept clear, so you can add them at any time.
 - **Self-checking.** The agent extracts keyframes with safe-area overlays, inspects them and fixes broken layouts before the final render.
 - **Parallel rendering.** Several scenes render at once, so rendering a one-minute video takes about half the time on a 6-core laptop ([numbers below](#parallel-rendering)).
@@ -160,7 +161,7 @@ The plan for the next versions. Nothing here is implemented yet, and the order m
 
 | Version | Theme | Planned |
 |---|---|---|
-| 0.3 | Camera | Geometric zoom (the camera moves in on what is already on screen), semantic zoom (zooming in reveals a deeper level of detail, and back out), a lens for small details and sideways transitions between scenes, with rules for each in `docs/STYLE.md` |
+| 0.3.1 | Highlighting | Highlight an object in both engines (dim the rest, trace its outline or tint it), with rules on when to highlight instead of using the lens or a zoom, and fixes to the docs found while testing the camera with agents |
 | 0.4 | Voices | More voice providers (Azure, ElevenLabs, local TTS), API keys in a `.env` file, and forced alignment for voices that do not report word timings |
 | 0.5 | Extra audio | A music and sound-effects track in `stitch.py`, and MIDI-driven animations |
 | 0.6 | 3D | 3D scenes with Remotion and Three.js, and a subtitle box for light backgrounds |

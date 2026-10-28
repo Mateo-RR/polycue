@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.3.0] — 2026-10-28
 
 ### Added
 
@@ -17,6 +17,12 @@ All notable changes to this project are documented here. The format follows [Kee
   - With the camera, everything is clipped to the content zone, so zoomed content never enters the subtitle zone.
   - Both engines follow the same path and easing: the zoom is geometric around the one point that stays still on screen, so zooming in on something never drifts away from it first (`studio/zoom_path.py`, mirrored in `src/studio/zoomPath.ts`, with unit tests).
 - `theme.json → camera`: how much of the content zone a zoomed target fills, when the background closes in during a semantic zoom, the starting scale of the next level, the duration of each half of a lateral transition, and the lens defaults.
+
+### Changed
+
+- `docs/PRODUCTION.md`: camera moves are decided while writing the script (Step 2) and written into each scene's `visual_plan`; QA (Step 5) checks every move with a strip of frames and the frames where two scenes are joined.
+- `docs/STYLE.md`: scenes joined by a camera transition skip the fade on that side (section 2); text below the `caption` size is allowed only as the source of a lens; fixed durations also cover the camera moves of section 6.
+- `SyncedScene.finish()` fades out only the scene's content, so `CameraScene` keeps the mask that clips to the content zone.
 
 ## [0.2.0] — 2026-10-27
 
@@ -74,6 +80,7 @@ First public release.
 - Tested on Windows 11 only.
 - One engine per scene: a scene cannot mix Manim and Remotion layers.
 
+[0.3.0]: https://github.com/Mateo-RR/polycue/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Mateo-RR/polycue/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/Mateo-RR/polycue/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Mateo-RR/polycue/releases/tag/v0.1.0
