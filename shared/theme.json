@@ -56,5 +56,16 @@
     "scene_fade_out_sec": 0.35,
     "max_fixed_transition_sec": 0.6,
     "min_gap_between_cues_sec": 0.3
+  },
+  "camera": {
+    "_comment": "fill: share of the content zone a geometric zoom target fills. through_fade_from: share of a semantic zoom after which the background closes in (and, zooming out, before which it opens). emerge_scale: starting scale of the next level (and final scale of a receding one). pan_sec: each half of a lateral transition between scenes. lens_zoom, lens_radius (share of the content zone's smaller side), lens_stroke_px: defaults of the lens; lens_corner_px: corner radius of a rectangular lens.",
+    "fill": 0.8,
+    "through_fade_from": 0.5,
+    "emerge_scale": 0.3,
+    "pan_sec": 0.6,
+    "lens_zoom": 3,
+    "lens_radius": 0.2,
+    "lens_stroke_px": 3,
+    "lens_corner_px": 16
   }
 }

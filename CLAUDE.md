@@ -55,10 +55,10 @@ This file is an index. Read only the documents the current task needs.
 ├── manim_engine/
 │   ├── .venv/
 │   ├── requirements.txt
-│   └── studio/                   # theme.py, sync.py, i18n.py (shared helpers)
+│   └── studio/                   # theme.py, sync.py, camera.py, i18n.py (shared helpers)
 ├── remotion_engine/
 │   └── src/
-│       ├── studio/               # theme.ts, useCue.ts, SafeArea.tsx, Fade.tsx (imported as @studio/…)
+│       ├── studio/               # theme.ts, useCue.ts, SafeArea.tsx, Fade.tsx, Camera.tsx (imported as @studio/…)
 │       ├── registry.ts           # Finds projects/*/scenes/remotion/SceneXX.tsx
 │       ├── Root.tsx
 │       └── index.ts

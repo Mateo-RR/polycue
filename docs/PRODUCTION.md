@@ -60,6 +60,7 @@ Create `projects/<slug>/manifest.json` (language-neutral):
 - `entry`: Manim class name or Remotion component name.
 - `cues`: ordered list of sync points used by the scene's animations.
 - `lang_neutral`: `true` only if the scene shows no text at all and has no cues; such scenes can be reused across languages.
+- **Camera:** decide now, scene by scene, whether the camera helps (`docs/STYLE.md`, section 6: the table of what the narration does, and the budget). Most scenes need none. When one does, write the move and its cue into `visual_plan`, and write the narration so the cue falls right before the words that name what the move shows. Joins between scenes (semantic zoom or lateral transition) are planned here too, with the sentence carrying over the cut.
 
 Create `projects/<slug>/locales/<lang>/narration.json`:
 
@@ -148,6 +149,8 @@ export const Scene01: React.FC<SceneProps> = (props) => {
 
 Follow every rule in `docs/STYLE.md` (no hardcoded text, theme values only, content zone only).
 
+**Camera moves** planned in `visual_plan` (zoom, semantic zoom, lens, lateral transition): Manim scenes inherit from `CameraScene` instead of `SyncedScene`; Remotion scenes wrap their content in `<Camera>`. Rules and the full API: `docs/STYLE.md`, section 6. Do not add moves the plan does not have.
+
 ## Step 5 — Preview render + visual QA (self-healing loop)
 
 ```bash
@@ -163,6 +166,7 @@ Open every QA image (plain and overlay versions) and check:
 4. Is the text readable at phone size (not below the `caption` size)?
 5. At cue frames: is the animated element actually visible when the voice mentions it?
 6. Does the scene match its `visual_plan`?
+7. Scenes with a camera move: does each move start at its cue, and is what it shows readable at the end of it? Check a strip of frames across each move as `docs/STYLE.md`, section 6 describes (the QA frames cannot show whether a move is abrupt), and for joins between scenes check that the first frame of the next scene is plain background (and so is the last frame of the first one, except for an edge leaving in a lateral transition).
 
 If anything fails, fix the code and re-render only the affected scenes (`--scenes scene_0X …`; they render in parallel). Maximum 3 iterations per scene; if it still fails, continue and report the issue to the user.
 

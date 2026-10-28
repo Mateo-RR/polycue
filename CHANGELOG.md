@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Camera,** in both engines. When to use each tool and how: `docs/STYLE.md`, section 6, which also tells the agent to decide camera moves when writing the script and how many to use.
+  - Geometric zoom: the camera moves in on what is already on screen, or a scene opens on a detail and pulls back to show the whole.
+  - Semantic zoom, in and out: zooming through an element into another level of detail, and back up a level.
+  - Lens: a magnified, live view of a small region in a circle, or a rounded rectangle for long details, while the whole stays on screen.
+  - Lateral transition between two scenes: the camera leaves one sideways and arrives at the next moving the same way, at the same speed at the cut.
+  - Semantic zooms and lateral transitions can join two scenes, also of different engines; the cut falls on a clean background.
+  - Manim: `CameraScene` (`studio/camera.py`), a `SyncedScene` with `zoom_to`, `zoom_reset`, `start_at`, `zoom_through`, `emerge`, `recede`, `zoom_out_of`, `pan_in`, `pan_out`, `lens`, `open_lens`, `close_lens` and `pin`.
+  - Remotion: `<Camera>` (with `initial` and `pinned`), `zoomReset`, `zoomThrough`, `zoomOutOf`, `panIn`, `panOut`, `<Emerge>`, `<Recede>` and `<Lens>` (`@studio/Camera`); `<Fade>` takes `fadeIn` / `fadeOut`.
+  - With the camera, everything is clipped to the content zone, so zoomed content never enters the subtitle zone.
+  - Both engines follow the same path and easing: the zoom is geometric around the one point that stays still on screen, so zooming in on something never drifts away from it first (`studio/zoom_path.py`, mirrored in `src/studio/zoomPath.ts`, with unit tests).
+- `theme.json → camera`: how much of the content zone a zoomed target fills, when the background closes in during a semantic zoom, the starting scale of the next level, the duration of each half of a lateral transition, and the lens defaults.
+
 ## [0.2.0] — 2026-10-27
 
 ### Changed

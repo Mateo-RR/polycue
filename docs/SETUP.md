@@ -74,7 +74,7 @@ Notes:
 
 1. Create the venv: `python3 -m venv manim_engine/.venv`.
 2. Install: `manim`, `edge-tts`, `mutagen`. Freeze exact versions to `manim_engine/requirements.txt`.
-3. Create the helper package `manim_engine/studio/` with `__init__.py` and the three modules below.
+3. Create the helper package `manim_engine/studio/` with `__init__.py` and the modules below.
 
 ### `studio/theme.py`
 
@@ -110,6 +110,11 @@ Base class `SyncedScene(Scene)` used by every Manim scene:
 
 **Check:** a throwaway scene using `SyncedScene` with a fake `timings.json` renders in preview mode and lasts exactly `total_sec`.
 
+### `studio/zoom_path.py` and `studio/camera.py`
+
+- `zoom_path.py` (standard library only, unit-tested): `ease_in_out_cubic(t)` (the same curve as Remotion's `Easing.inOut(Easing.cubic)`), `ease_in_cubic` and `ease_out_cubic` (its two halves, stretched: they meet at the same speed, for lateral transitions), `view_at(start, end, t)`, `through_fade(t, fade_from)` and `lens_tangents(source, at, zoom, half_w, half_h, corner)` (the two outer tangent segments between a lens, a rounded rectangle or a circle, and its source, the same shape scaled by `1 / zoom`; they meet at the shapes' center of similarity). A view is `(x, y, w)`: the point shown at the center of the content zone and the visible width. `view_at` zooms geometrically around the one point that stays still on screen during the move (a straight pan when the zoom does not change). Mirrored in Remotion's `zoomPath.ts`.
+- `camera.py`: `CameraScene(SyncedScene, MovingCameraScene)`. A mask in the background color, drawn above everything and moved with the camera, clips the picture to the content zone. Methods that return animations: `zoom_to(target, fill=None, zoom=None)`, `zoom_reset()`, `zoom_through(target)` (zoom until a convex target covers the content zone while everything fades to the background from `camera.through_fade_from`, then remove it all and reset the camera) and `emerge(*mobjects)` (`FadeIn` growing from `camera.emerge_scale` about the center of the content zone). Also `start_at(target, …)` (set the view without a move), `recede()` and `zoom_out_of(target, *mobjects)` (semantic zoom out: `emerge` and `zoom_through` played backwards), `pan_in(direction, *mobjects)` / `pan_out(direction)` (lateral transitions, `camera.pan_sec` each, ease-out / ease-in cubic, moving one content zone; `pan_out` ends the scene), and `lens(source, at, zoom, radius, size)` with `open_lens` / `close_lens` (round, or rectangular with `size`). The lens is drawn by `LensCamera`, a `MovingCamera` subclass that, after the normal drawing, clips Cairo to the lens outline and draws the scene's vector mobjects again, scaled about the source; an open lens counts as moving so it is redrawn every frame. `pin(*mobjects)` keeps mobjects fixed on screen; `content()` lists the scene's mobjects without the mask and the camera frame, and `finish()` fades only those. Rules for scene code in `docs/STYLE.md`, section 6.
+
 ---
 
 ## Phase 4 — Remotion engine (`remotion_engine/`)
@@ -124,6 +129,9 @@ Base class `SyncedScene(Scene)` used by every Manim scene:
    - `SafeArea.tsx`: wrapper that lays children inside the content zone for the current orientation (from props). Optional `debug` prop draws the safe area and subtitle zone outlines.
    - `Fade.tsx`: scene-level wrapper applying the fade-in at start and fade-out during the final padding frames, so Remotion scenes cut exactly like Manim scenes.
    - `types.ts`: `SceneProps = { slug; lang; orientation; timing: SceneTiming; strings: Record<string,string> }`.
+   - `zoomPath.ts`: mirror of `manim_engine/studio/zoom_path.py` (same easing and camera path).
+   - `Camera.tsx`: `<Camera orientation moves initial pinned>` fills and clips the content zone inside `<SafeArea>` and applies the camera moves (`{ at, frames, x, y, zoom }`, with `x`/`y` as fractions of the content zone, plus `from`, `shift`, `ease` and flags for the special moves); `initial` is the framing before the first move; `pinned` is drawn over the content without moving with the camera, fades with it in a semantic zoom and travels with it in a lateral transition. Helpers: `zoomReset(at, frames)`; `zoomThrough({ at, frames, x, y, size }, orientation)` (semantic zoom in; afterwards the `<Camera>` renders nothing); `zoomOutOf(…)` (semantic zoom out; the `<Camera>` renders nothing before it); `panIn(direction)` / `panOut(direction, timing)` (`camera.pan_sec` each). `<Emerge at frames>` grows the next level from `camera.emerge_scale`; `<Recede at frames pinned>` shrinks the current one into it. `<Lens orientation at frames until source center zoom radius size>` renders its children a second time, scaled about `source` and clipped to a circle or, with `size`, a rounded rectangle (`clip-path: inset(… round …)`), with the source outline and the tangent lines in SVG.
+   - `Fade.tsx`: `fadeIn` / `fadeOut` (default `true`) turn off the fade on a side joined to another scene by the camera.
 5. Scene code lives outside `remotion_engine/`, in `projects/<slug>/scenes/remotion/`. Make it compile from there:
    - `remotion.config.ts`: after enabling Tailwind, extend webpack's `resolve` with `remotion_engine/node_modules` in `modules` (scene files have no `node_modules` above them) and an alias `@studio` → `src/studio`. Scenes import helpers as `@studio/<module>`.
    - `tsconfig.json`: add `../projects/*/scenes/remotion` to `include`, and `paths` with `"@studio/*": ["./src/studio/*"]` and `"*": ["./node_modules/@types/*", "./node_modules/*"]` (types first, so `react` resolves to `@types/react`).

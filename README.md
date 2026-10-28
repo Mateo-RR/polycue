@@ -126,10 +126,10 @@ You need a working studio (`scripts/doctor.py` all `ok`) and a network connectio
 | `CLAUDE.md`, `docs/` | The agent-facing spec: setup, engine routing and visual rules, production and localization procedures |
 | `shared/` | `theme.json` (colors, fonts, canvas, zones, subtitle style), `voices.json`, fonts |
 | `scripts/` | `doctor.py`, `tts_sync.py`, `render.py`, `qa_frames.py`, `stitch.py`, `benchmark.py`, `migrate_layout.py` |
-| `manim_engine/studio/` | `SyncedScene` (cue-based timing), theme and i18n helpers |
-| `remotion_engine/src/studio/` | `useCue`, `SafeArea`, `Fade`, theme bridge |
+| `manim_engine/studio/` | `SyncedScene` (cue-based timing), `CameraScene` (zoom, lens, transitions), theme and i18n helpers |
+| `remotion_engine/src/studio/` | `useCue`, `SafeArea`, `Fade`, `Camera` (zoom, lens, transitions), theme bridge |
 | `projects/<slug>/` | Everything about one video: language-neutral `manifest.json`, `locales/<lang>/` (narration, strings), `scenes/manim/` and `scenes/remotion/` (scene code), renders and the final output |
-| `tests/` | Unit tests for narration parsing, cue alignment and subtitle layout |
+| `tests/` | Unit tests for narration parsing, cue alignment, subtitle layout and the camera path |
 
 ### Example project
 
@@ -160,7 +160,7 @@ The plan for the next versions. Nothing here is implemented yet, and the order m
 
 | Version | Theme | Planned |
 |---|---|---|
-| 0.3 | Camera | Geometric zoom (the camera moves in on what is already on screen) and semantic zoom (zooming in reveals a deeper level of detail), with rules for each in `docs/STYLE.md` |
+| 0.3 | Camera | Geometric zoom (the camera moves in on what is already on screen), semantic zoom (zooming in reveals a deeper level of detail, and back out), a lens for small details and sideways transitions between scenes, with rules for each in `docs/STYLE.md` |
 | 0.4 | Voices | More voice providers (Azure, ElevenLabs, local TTS), API keys in a `.env` file, and forced alignment for voices that do not report word timings |
 | 0.5 | Extra audio | A music and sound-effects track in `stitch.py`, and MIDI-driven animations |
 | 0.6 | 3D | 3D scenes with Remotion and Three.js, and a subtitle box for light backgrounds |

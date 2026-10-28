@@ -126,6 +126,10 @@ class SyncedScene(Scene):
         """Fade mobjects in over motion.scene_fade_in_sec."""
         self.play(*[FadeIn(m, **kwargs) for m in mobjects], run_time=self.frames(self.fade_in_sec))
 
+    def _fade_targets(self) -> list:
+        """Mobjects that finish() fades out (CameraScene keeps its mask)."""
+        return list(self.mobjects)
+
     def finish(self) -> None:
         """Fade everything out during the padding and end exactly at total_sec."""
         total_frames = round(self.total_sec * self.fps)
@@ -142,9 +146,10 @@ class SyncedScene(Scene):
         # Freeze always_redraw/updaters so they don't override the fade-out.
         for m in self.mobjects:
             m.clear_updaters()
-        if self.mobjects and remaining > 0:
+        targets = self._fade_targets()
+        if targets and remaining > 0:
             n = min(fade_frames, remaining)
-            self.play(*[FadeOut(m) for m in self.mobjects], run_time=self._animated_run_time(n))
+            self.play(*[FadeOut(m) for m in targets], run_time=self._animated_run_time(n))
         self.clear()
         self._wait_frames(total_frames - self._frames_now())
         drift = self._frames_now() - total_frames
