@@ -160,8 +160,8 @@ The plan for the next versions. Nothing here is implemented yet, and the order m
 
 | Version | Theme | Planned |
 |---|---|---|
-| 0.3 | Voices | More voice providers (Azure, ElevenLabs, local TTS), API keys in a `.env` file, and forced alignment for voices that do not report word timings |
-| 0.4 | Camera | Geometric zoom (the camera moves in on what is already on screen) and semantic zoom (zooming in reveals a deeper level of detail), with rules for each in `docs/STYLE.md` |
+| 0.3 | Camera | Geometric zoom (the camera moves in on what is already on screen) and semantic zoom (zooming in reveals a deeper level of detail), with rules for each in `docs/STYLE.md` |
+| 0.4 | Voices | More voice providers (Azure, ElevenLabs, local TTS), API keys in a `.env` file, and forced alignment for voices that do not report word timings |
 | 0.5 | Extra audio | A music and sound-effects track in `stitch.py`, and MIDI-driven animations |
 | 0.6 | 3D | 3D scenes with Remotion and Three.js, and a subtitle box for light backgrounds |
 | 1.0 | Stability | Tested on Windows, macOS and Linux; a documented and validated manifest format; no pending breaking changes |
