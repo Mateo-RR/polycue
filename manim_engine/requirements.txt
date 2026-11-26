@@ -15,7 +15,7 @@ frozenlist==1.8.0
 glcontext==3.1.0
 idna==3.20
 isosurfaces==0.1.2
-manim==0.22.0
+manim==0.22.1
 ManimPango==0.7.0
 mapbox_earcut==2.1.0
 markdown-it-py==4.2.0
