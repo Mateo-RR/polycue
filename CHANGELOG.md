@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Manim scenes with an `ImageMobject` failed to render with `ValueError: Invalid mode for data type`: manim 0.22.0 calls `Image.fromarray(..., mode="RGBA")` on a float array, which Pillow 13 (the pinned version) rejects. `manim_engine/requirements.txt` now pins manim 0.22.1, which works with Pillow 13.
+
 ## [0.3.0] — 2026-10-28
 
 ### Added
